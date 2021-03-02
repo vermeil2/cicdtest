@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     stages {
-        stage('checkout') {
+        stage('build') {
             steps {
-                checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://gitlab.com/springboot-reactjs/springboot.git']]]
+                sh "mvn clean package"
             }
         }
     }
