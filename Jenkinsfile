@@ -1,4 +1,4 @@
-def DOCKER_REGISTRY = ""
+def DOCKER_REGISTRY = "choisunguk/demo-springboot"
 def TAG = "dev"
 def DOCKER_IMAGE_NAME = "${DOCKER_REGISTRY}/${JOB_BASE_NAME}:${TAG}"
 
@@ -11,9 +11,12 @@ pipeline {
                 sh "mvn clean package"
             }
         }
-        stage('docker build'){
+        stage('build and push dockerimage'){
             steps{
-                sh "docker build -t ${DOCKER_IMAGE_NAME} ."                
+                def builded_dockerimage = docker.build("${DOCKER_IMAGE_NAME}")
+            }
+            steps{
+                builded_dockerimage.push()
             }
         }
     }
