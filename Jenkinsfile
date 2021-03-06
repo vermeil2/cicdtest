@@ -17,9 +17,13 @@ pipeline {
                     def builded_dockerimage = docker.build("${DOCKER_IMAGE_NAME}")
                 }
             }
+        }
+        stage("push dockerimage"){
             steps{
                 script{
-                    builded_dockerimage.push()
+                    docker.withregistry('https://hub.docker.com', 'dockerhub'){
+                        builded_dockerimage.push()
+                    }
                 }
             }
         }
