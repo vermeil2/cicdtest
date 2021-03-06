@@ -13,10 +13,14 @@ pipeline {
         }
         stage('build and push dockerimage'){
             steps{
-                def builded_dockerimage = docker.build("${DOCKER_IMAGE_NAME}")
+                script{
+                    def builded_dockerimage = docker.build("${DOCKER_IMAGE_NAME}")
+                }
             }
             steps{
-                builded_dockerimage.push()
+                script{
+                    builded_dockerimage.push()
+                }
             }
         }
     }
