@@ -11,7 +11,7 @@ pipeline {
                 sh "mvn clean package"
             }
         }
-        stage('build and push dockerimage'){
+        stage('build docker image'){
             steps{
                 script{
                     def builded_dockerimage = docker.build("${DOCKER_IMAGE_NAME}")
