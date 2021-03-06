@@ -1,6 +1,6 @@
 def DOCKER_REGISTRY = "choisunguk/demo-springboot"
 def TAG = "dev"
-def DOCKER_IMAGE_NAME = "${DOCKER_REGISTRY}/${JOB_BASE_NAME}:${TAG}"
+def DOCKER_IMAGE_NAME = "${DOCKER_REGISTRY}:${TAG}"
 
 pipeline {
     agent any
