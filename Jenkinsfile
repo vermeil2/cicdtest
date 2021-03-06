@@ -14,7 +14,7 @@ pipeline {
         stage('build docker image'){
             steps{
                 script{
-                    def builded_dockerimage = docker.build("${DOCKER_IMAGE_NAME}")
+                    builded_dockerimage = docker.build("${DOCKER_IMAGE_NAME}")
                 }
             }
         }
