@@ -40,6 +40,14 @@ pipeline {
                 }    
             }
         }
+        stage('change deployment image name'){
+            dir ('kubernetes_resource'){
+                script {
+                    def sed_docker_image_name = docker_image_name.replace("/", "\\/")
+                    sh(script:"""sed -i "s/IMAGE_NAME/${sed_docker_image_name}/g" deployment.yaml""")
+                }
+            }
+        }
         stage('deploy restart same image version'){
             when{
                 expression{
@@ -63,10 +71,6 @@ pipeline {
             }
             steps{
                 dir ('kubernetes_resource'){
-                    script {
-                        def sed_docker_image_name = docker_image_name.replace("/", "\\/")
-                        sh(script:"""sed -i "s/IMAGE_NAME/${sed_docker_image_name}/g" deployment.yaml""")
-                    }
                     sh 'kubectl apply -f .' 
                 }
             }
