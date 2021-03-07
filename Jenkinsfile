@@ -34,7 +34,7 @@ pipeline {
                 echo docker_image_name
                 dir ('kubernetes_resource'){
                     script {
-                        sh(script:"""sed -i "s/IMAGE_NAME/${docker_image_name}/g" deployment.yaml""")
+                        sh(script:"""sed -i "s/IMAGE_NAME/'${docker_image_name}'/g" deployment.yaml""")
                     }
                     sh 'kubectl apply -f .' 
                 }
