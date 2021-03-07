@@ -42,7 +42,9 @@ pipeline {
         }
         stage('deploy restart same image version'){
             when{
-                current_version == version
+                expression{
+                    current_version == version
+                }
             }
             steps{
                 dir ('kubernetes_resource'){
@@ -55,7 +57,9 @@ pipeline {
         }
         stage('deploy on kubernetes'){
             when{
-                current_version != version
+                expression {
+                    current_version != version
+                }
             }
             steps{
                 dir ('kubernetes_resource'){
