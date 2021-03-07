@@ -33,8 +33,7 @@ pipeline {
             steps{
                 dir ('kubernetes_resource'){
                     script {
-                        def docker_image_name = "${DOCKER_REGISTRY}\/demo-springboot:${version}"
-                        sh(script:"""sed -i "s/IMAGE_NAME/${docker_image_name}/g" deployment.yaml""")
+                        sh(script:"""sed -i "s/IMAGE_NAME/${DOCKER_REGISTRY}\/demo-springboot:${version}/g" deployment.yaml""")
                     }
                     sh 'kubectl apply -f .' 
                 }
