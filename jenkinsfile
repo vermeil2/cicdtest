@@ -12,9 +12,8 @@ pipeline {
         stage('build docker image'){
             steps{
                 script{
-                    def xml_file = readFile "pom.xml"
-                    def xmlContents = new XmlParser().parseText(xml_file)
-                    version = xmlContents.version.text()
+                    def pom = readMavenPom file: 'pom.xml'
+                    def version = pom.version 
 
                     docker_image_name = "${DOCKER_REGISTRY}/demo-springboot:${version}"
                     builded_dockerimage = docker.build("${docker_image_name}")
