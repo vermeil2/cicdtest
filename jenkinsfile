@@ -32,6 +32,7 @@ pipeline {
         stage('deploy on kubernetes'){
             steps{
                 sh 'cd ${WORKSPACE}/kubernetes_resource'
+                sh "ls"
                 sh 'sed -i "s/IMAGE_NAME/${docker_image_name}/g" deployment.yaml'
                 sh 'kubectl apply -f .'                
             }
