@@ -26,6 +26,7 @@ pipeline {
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub'){
                         builded_dockerimage.push()
                     }
+                    sh "docker rmi ${docker_image_name}"
                 }
             }
         }
