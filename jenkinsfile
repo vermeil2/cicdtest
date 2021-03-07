@@ -50,7 +50,7 @@ pipeline {
                 dir ('kubernetes_resource'){
                     script {
                         sh(script: """kubectl apply -f .""")
-                        sh(script: """kubectl rollout restart ${DEPLOYMNET_NAME} -n ${DEPLOYMENT_NAMESPACE}""")
+                        sh(script: """kubectl rollout restart deployment ${DEPLOYMNET_NAME} -n ${DEPLOYMENT_NAMESPACE}""")
                     }
                 }
             }
