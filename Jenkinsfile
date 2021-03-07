@@ -13,9 +13,9 @@ pipeline {
             steps{
                 script{
                     def pom = readMavenPom file: 'pom.xml'
-                    version = pom.version
+                    def version = pom.version
 
-                    def docker_image_name = "${DOCKER_REGISTRY}/demo-springboot:${version}"
+                    docker_image_name = "${DOCKER_REGISTRY}/demo-springboot:${version}"
                     builded_dockerimage = docker.build("${docker_image_name}")
                 }
             }
@@ -33,7 +33,8 @@ pipeline {
             steps{
                 dir ('kubernetes_resource'){
                     script {
-                        sh(script:"""sed -i "s/IMAGE_NAME/${DOCKER_REGISTRY}\/demo-springboot:${version}/g" deployment.yaml""")
+                        docker_image_name = docker_image_name.replace("/", "\\/")
+                        sh(script:"""sed -i "s/IMAGE_NAME/${docker_image_name}/g" deployment.yaml""")
                     }
                     sh 'kubectl apply -f .' 
                 }
