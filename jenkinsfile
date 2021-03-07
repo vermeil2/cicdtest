@@ -1,4 +1,6 @@
 def DOCKER_REGISTRY = "choisunguk"
+def DEPLOYMNET_NAME = "springboot-demo"
+def DEPLOYMENT_NAMESPACE = "default"
 
 pipeline {
     agent any
@@ -13,7 +15,7 @@ pipeline {
             steps{
                 script{
                     def pom = readMavenPom file: 'pom.xml'
-                    def version = pom.version
+                    version = pom.version
 
                     docker_image_name = "${DOCKER_REGISTRY}/demo-springboot:${version}"
                     builded_dockerimage = docker.build("${docker_image_name}")
@@ -30,12 +32,36 @@ pipeline {
                 }
             }
         }
-        stage('deploy on kubernetes'){
+        stage('get version'){
+            steps{
+                script{
+                    image_name = sh(script:"""kubectl get po -A -o json | jq --raw-output '.items[].spec.containers[].image | select(. == ${docker_image_name})' | sort | uniq""", returnStdout:true)
+                    current_version = image_name.split(":")[1].trim()
+                }    
+            }
+        }
+        stage('deploy restart same image version'){
+            when{
+                current_version == version
+            }
             steps{
                 dir ('kubernetes_resource'){
                     script {
-                        docker_image_name = docker_image_name.replace("/", "\\/")
-                        sh(script:"""sed -i "s/IMAGE_NAME/${docker_image_name}/g" deployment.yaml""")
+                        sh(script: """kubectl apply -f .""")
+                        sh(script: """kubectl rollout restart ${DEPLOYMNET_NAME} -n ${DEPLOYMENT_NAMESPACE}""")
+                    }
+                }
+            }
+        }
+        stage('deploy on kubernetes'){
+            when{
+                current_version != version
+            }
+            steps{
+                dir ('kubernetes_resource'){
+                    script {
+                        def sed_docker_image_name = docker_image_name.replace("/", "\\/")
+                        sh(script:"""sed -i "s/IMAGE_NAME/${sed_docker_image_name}/g" deployment.yaml""")
                     }
                     sh 'kubectl apply -f .' 
                 }
