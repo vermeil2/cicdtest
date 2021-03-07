@@ -1,6 +1,4 @@
 def DOCKER_REGISTRY = "choisunguk"
-def TAG = "dev"
-def DOCKER_IMAGE_NAME = "${DOCKER_REGISTRY}/demo-springboot:${TAG}"
 
 pipeline {
     agent any
@@ -10,11 +8,16 @@ pipeline {
             steps {
                 sh "mvn clean package"
             }
-        }
+        }        
         stage('build docker image'){
             steps{
                 script{
-                    builded_dockerimage = docker.build("${DOCKER_IMAGE_NAME}")
+                    def xml_file = readFile "pom.xml"
+                    def xmlContents = new XmlParser().parseText(xml_file)
+                    version = xmlContents.version.text()
+
+                    docker_image_name = "${DOCKER_REGISTRY}/demo-springboot:${version}"
+                    builded_dockerimage = docker.build("${docker_image_name}")
                 }
             }
         }
