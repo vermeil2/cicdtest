@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-demo
+  labels:
+    app: backend-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-demo
+  template:
+    metadata:
+      labels:
+        app: backend-demo
+    spec:
+      containers:
+      - name: backend
+        image: IMAGE_NAME
+        ports:
+        - containerPort: 8080
