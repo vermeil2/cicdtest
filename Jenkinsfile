@@ -35,7 +35,7 @@ pipeline {
         stage('get version'){
             steps{
                 script{
-                    image_name = sh(script:"""kubectl get po -A -o json | jq --raw-output '.items[].spec.containers[].image | select(. == ${docker_image_name})' | sort | uniq""", returnStdout:true)
+                    image_name = sh(script:"""kubectl get po -A -o json | jq --raw-output '.items[].spec.containers[].image | select(. == "${docker_image_name}")' | sort | uniq""", returnStdout:true)
                     current_version = image_name.split(":")[1].trim()
                 }    
             }
