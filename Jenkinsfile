@@ -5,7 +5,7 @@ pipeline {
         stage('build') {
             steps {
                 sh "mvn clean package"
-                echo "test12345"
+                echo "test1234512321312"
             }
         }
         stage('docker build and push') {
