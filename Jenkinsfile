@@ -8,6 +8,6 @@ pipeline {
                 echo "test1234512321312"
             }
         }
-        }
+     }
 }
 
